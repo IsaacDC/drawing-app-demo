@@ -133,13 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // draws on the non-drawing client(s) screen(s)
   socket.on("incomingStartDrawing", ({ x, y, color, width, socketId }) => {
-    otherUsers[socketId] = { x, y, color, width, isDrawing: true };
-  });
-
-  socket.on("incomingDraw", ({ x, y, color, width, socketId }) => {
     if (!otherUsers[socketId]) {
       otherUsers[socketId] = { x, y, color, width, isDrawing: true };
-    } else {
+    }
+  });
+  
+  socket.on("incomingDraw", ({ x, y, color, width, socketId }) => {
+    if (otherUsers[socketId] && otherUsers[socketId].isDrawing) {
       ctx.beginPath();
       ctx.moveTo(otherUsers[socketId].x, otherUsers[socketId].y);
       ctx.lineTo(x, y);
@@ -147,15 +147,17 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.lineWidth = width;
       ctx.lineCap = "round";
       ctx.stroke();
-      otherUsers[socketId] = { x, y, color, width, isDrawing: true };
+      otherUsers[socketId].x = x;
+      otherUsers[socketId].y = y;
     }
   });
-
+  
   socket.on("incomingStopDrawing", ({ socketId }) => {
     if (otherUsers[socketId]) {
       otherUsers[socketId].isDrawing = false;
     }
   });
+  
 
   socket.on("changeStrokeColor", ({ socketId, color }) => {
     if (socketId !== socket.id) {
