@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.strokeStyle = color;
   });
 
-  socket.on("incomingDraw", ({ x, y, color, width, socketId }) => {
+  socket.on("incomingDraw", ({ x, y, socketId }) => {
     if (remoteCanvases[socketId]) {
       const { ctx } = remoteCanvases[socketId];
       ctx.lineTo(x, y);

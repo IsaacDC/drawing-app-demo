@@ -19,19 +19,19 @@ io.on("connection", (socket) => {
   });
   // start drawing event
   socket.on("startDrawing", ({ x, y, color, width }) => {
-    const data = { type: "start", x, y, color, width };
+    const data = { type: "start", x, y, color, width, socketId: socket.id};
     socket.broadcast.emit("incomingStartDrawing", data);
   });
 
   // draw event
   socket.on("draw", ({ x, y, color, width }) => {
-    const data = { type: "draw", x, y, color, width };
+    const data = { type: "draw", x, y, color, width, socketId: socket.id};
     socket.broadcast.emit("incomingDraw", data);
   });
 
   // stop drawing event
   socket.on("stopDrawing", () => {
-    const data = { type: "stop" };
+    const data = { type: "stop", socketId: socket};
     socket.broadcast.emit("incomingStopDrawing", data);
   });
 
