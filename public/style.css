@@ -15,7 +15,7 @@ body {
   margin: 20px;
 }
 canvas {
-  position: relative;
+  position: absolute;
   background-color: white;
 }
 
