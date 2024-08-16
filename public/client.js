@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
       y: lastY,
       color,
       width: strokeWidth,
+      socketId: socket.id,
     });
   }
 
@@ -117,46 +118,43 @@ document.addEventListener("DOMContentLoaded", () => {
       y,
       color,
       width: strokeWidth,
+      socketId: socket.id,
     });
 
     [lastX, lastY] = [x, y];
-
   }
 
   function stopDrawing(e) {
     if (!isDrawing) return;
     isDrawing = false;
     ctx.beginPath();
-    socket.emit("stopDrawing");
+    socket.emit("stopDrawing", { socketId: socket.id });
   }
 
   // draws on the non-drawing client(s) screen(s)
-  socket.on("incomingStartDrawing", ({ x, y, color, width, sessionId }) => {
-    otherUsers[sessionId] = { x, y, color, width };
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+  socket.on("incomingStartDrawing", ({ x, y, color, width, socketId }) => {
+    otherUsers[socketId] = { x, y, color, width, isDrawing: true };
   });
 
-  socket.on("incomingDraw", ({ x, y, color, width, sessionId }) => {
-    if (!otherUsers[sessionId]) {
-      otherUsers[sessionId] = { x, y, color, width };
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+  socket.on("incomingDraw", ({ x, y, color, width, socketId }) => {
+    if (!otherUsers[socketId]) {
+      otherUsers[socketId] = { x, y, color, width, isDrawing: true };
     } else {
       ctx.beginPath();
-      ctx.moveTo(otherUsers[sessionId].x, otherUsers[sessionId].y);
+      ctx.moveTo(otherUsers[socketId].x, otherUsers[socketId].y);
       ctx.lineTo(x, y);
       ctx.strokeStyle = color;
       ctx.lineWidth = width;
       ctx.lineCap = "round";
       ctx.stroke();
-      otherUsers[sessionId] = { x, y, color, width };
+      otherUsers[socketId] = { x, y, color, width, isDrawing: true };
     }
   });
 
-  socket.on("incomingStopDrawing", ({sessionId}) => {
-    delete otherUsers[sessionId];
-    ctx.beginPath();
+  socket.on("incomingStopDrawing", ({ socketId }) => {
+    if (otherUsers[socketId]) {
+      otherUsers[socketId].isDrawing = false;
+    }
   });
 
   socket.on("changeStrokeColor", ({ socketId, color }) => {
