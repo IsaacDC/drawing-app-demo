@@ -9,27 +9,19 @@ body {
   background-color: #081e3f;
 }
 
-#canvas-container{
-  position: relative;
-  width: 1280px;
-  height: 720px;
-  margin: 20px;
-}
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: white;
+#canvas-container {
+  width: 2560px;
+  height: 1440px;
 }
 
-#local-canvas {
-  background-color: transparent !important;
-  z-index: 10;
+canvas{
+  background-color: white;
 }
 
 .tools {
   position: sticky;
   left: 0;
+  bottom: 0;
   width: 100vw;
   display: flex;
   flex-direction: row;

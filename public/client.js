@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let strokeWidth = 5;
 
   // Set up canvas
-  canvas.width = 1280;
-  canvas.height = 720;
+  canvas.width = 2560;
+  canvas.height = 1440;
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
@@ -52,13 +52,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getCoordinates(e) {
     const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
     if (e.type.startsWith("mouse")) {
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      return { 
+        x: (e.clientX - rect.left) * scaleX, 
+        y: (e.clientY - rect.top) * scaleY 
+      };
     } else {
       const touch = e.touches[0];
       return {
-        x: touch.clientX - rect.left,
-        y: touch.clientY - rect.top,
+        x: (touch.clientX - rect.left) * scaleX,
+        y: (touch.clientY - rect.top) * scaleY,
       };
     }
   }
