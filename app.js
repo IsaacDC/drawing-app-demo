@@ -14,24 +14,21 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("disconnect", () => {
-    io.emit("userDisconnected", socket.id);
-  });
   // start drawing event
   socket.on("startDrawing", ({ x, y, color, width }) => {
-    const data = { type: "start", x, y, color, width, socketId: socket.id};
+    const data = { type: "start", x, y, color, width };
     socket.broadcast.emit("incomingStartDrawing", data);
   });
 
   // draw event
   socket.on("draw", ({ x, y, color, width }) => {
-    const data = { type: "draw", x, y, color, width, socketId: socket.id};
+    const data = { type: "draw", x, y, color, width };
     socket.broadcast.emit("incomingDraw", data);
   });
 
   // stop drawing event
   socket.on("stopDrawing", () => {
-    const data = { type: "stop", socketId: socket};
+    const data = { type: "stop" };
     socket.broadcast.emit("incomingStopDrawing", data);
   });
 
