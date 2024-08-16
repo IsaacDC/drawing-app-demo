@@ -22,11 +22,6 @@ canvas {
   background-color: white;
 }
 
-#local-canvas {
-  background-color: transparent !important;
-  z-index: 10;
-}
-
 .tools {
   position: sticky;
   left: 0;
