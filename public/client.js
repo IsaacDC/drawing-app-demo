@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set up both canvases
   [localCanvas, remoteCanvas].forEach(canvas => {
     canvas.width = 2250;
-    canvas.height = 3873;
+    canvas.height = 3693;
   });
 
   // Mouse events (only for local canvas)
