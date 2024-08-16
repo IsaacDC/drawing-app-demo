@@ -13,37 +13,36 @@
   </head>
 
   <body>
-    <div id="canvas-container">
-      <canvas id="canvas"></canvas>
-    </div>
+      <div class="canvas-container">
+        <canvas id="canvas"></canvas>
+      </div>
 
-    <div class="tools">
-      <button id="clear-all" class="fa-solid fa-trash"></button>
-
-      <input
-        title="color-picker"
-        type="color"
-        id="stroke-color"
-        name="color"
-        value="#00000"
-      />
-      <input
-        title="width-slider"
-        type="range"
-        min="1"
-        max="100"
-        value="5"
-        id="stroke-width"
-      />
-      <input
-        title="slider-value"
-        type="number"
-        min="1"
-        max="100"
-        value="5"
-        id="slider-value"
-      />
-    </div>
+      <div class="tools">
+        <button id="clear-all" class="fa-solid fa-trash"></button>
+        <input
+          title="color-picker"
+          type="color"
+          id="stroke-color"
+          name="color"
+          value="#00000"
+        />
+        <input
+          title="width-slider"
+          type="range"
+          min="1"
+          max="100"
+          value="5"
+          id="stroke-width"
+        />
+        <input
+          title="slider-value"
+          type="number"
+          min="1"
+          max="100"
+          value="5"
+          id="slider-value"
+        />
+      </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>

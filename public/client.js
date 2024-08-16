@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let strokeWidth = 5;
 
   // Set up canvas
-  canvas.width = 2560;
-  canvas.height = 1440;
+  canvas.width = 1920;
+  canvas.height = 1080;
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
