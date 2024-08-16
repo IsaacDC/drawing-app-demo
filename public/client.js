@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
 
-  canvas.width = 1280;
-  canvas.height = 720;
+  canvas.width = 2436;
+  canvas.height = 1135;
 
   let isDrawing = false;
   let lastX = 0;
