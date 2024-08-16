@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const socket = io.connect();
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = 2436;
-  canvas.height = 1135;
+  const localCanvas = document.getElementById("local-canvas");
+  const remoteCanvas = document.getElementById("remote-canvas");
+  const localCtx = localCanvas.getContext("2d");
+  const remoteCtx = remoteCanvas.getContext("2d");
 
   let isDrawing = false;
   let lastX = 0;
@@ -12,69 +11,62 @@ document.addEventListener("DOMContentLoaded", () => {
   let color = "#000000";
   let strokeWidth = 5;
 
-  const otherUsers = {};
+  // Set up both canvases
+  [localCanvas, remoteCanvas].forEach(canvas => {
+    canvas.width = 2436;
+    canvas.height = 1125;
+  });
 
-  // mouse events
-  $(canvas).on("mousedown", startDrawing);
-  $(canvas).on("mousemove", draw);
-  $(canvas).on("mouseup", stopDrawing);
-  $(canvas).on("mouseleave", stopDrawing);
+  // Mouse events (only for local canvas)
+  localCanvas.addEventListener("mousedown", startDrawing);
+  localCanvas.addEventListener("mousemove", draw);
+  localCanvas.addEventListener("mouseup", stopDrawing);
+  localCanvas.addEventListener("mouseleave", stopDrawing);
 
-  // touch events
-  $(canvas).on("touchstart", startDrawing);
-  $(canvas).on("touchmove", draw);
-  $(canvas).on("touchend", stopDrawing);
-  $(canvas).on("touchcancel", stopDrawing);
+  // Touch events (only for local canvas)
+  localCanvas.addEventListener("touchstart", startDrawing);
+  localCanvas.addEventListener("touchmove", draw);
+  localCanvas.addEventListener("touchend", stopDrawing);
+  localCanvas.addEventListener("touchcancel", stopDrawing);
 
-  //Clears drawings
+  // Clear all drawings
   $("#clear-all").on("click", () => {
     if (confirm("Are you sure you want to clear all drawings?")) {
-      location.reload();
+      clearCanvas(localCtx);
+      clearCanvas(remoteCtx);
       socket.emit("clearDrawings");
     }
   });
 
-  //updates stroke color
+  // Update stroke color
   $("#stroke-color").on("input", () => {
     color = $("#stroke-color").val();
     socket.emit("changeStrokeColor", color);
   });
 
-  //change stroke width
+  // Update stroke width
   function updateValues(value) {
     strokeWidth = value;
     $("#stroke-width").val(value);
     $("#slider-value").val(value);
-    ctx.lineWidth = value;
+    localCtx.lineWidth = value;
     socket.emit("changeStrokeWidth", value);
   }
-  // Update input value and stroke width when slider changes
-  $("#stroke-width").on("input", function () {
-    const value = $(this).val();
-    updateValues(value);
+
+  $("#stroke-width, #slider-value").on("input", function() {
+    updateValues($(this).val());
   });
-  // Update slider and stroke width when input value changes
-  $("#slider-value").on("input", function () {
+
+  $("#slider-value").on("blur", function() {
     let value = $(this).val();
-    value = Math.max(0, Math.min(value, 100));
-    updateValues(value);
-  });
-  // invalid stroke value handler
-  $("#slider-value").on("blur", function () {
-    let value = $(this).val();
-    if (value === "" || value < 1) {
-      value = 1;
-    } else {
-      value = Math.min(value, 100);
-    }
+    value = Math.max(1, Math.min(value, 100));
     updateValues(value);
   });
 
-  //begins the drawing process
   function getCoordinates(e) {
-    const rect = canvas.getBoundingClientRect();
+    const rect = localCanvas.getBoundingClientRect();
     if (e.type.startsWith("mouse")) {
-      return { x: e.offsetX, y: e.offsetY };
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
     } else {
       const touch = e.touches[0];
       return {
@@ -89,19 +81,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const { x, y } = getCoordinates(e);
     [lastX, lastY] = [x, y];
 
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineCap = "round";
-    ctx.lineWidth = strokeWidth;
-    ctx.strokeStyle = color;
+    localCtx.beginPath();
+    localCtx.moveTo(lastX, lastY);
+    localCtx.lineCap = "round";
+    localCtx.lineWidth = strokeWidth;
+    localCtx.strokeStyle = color;
 
-    socket.emit("startDrawing", {
-      x: lastX,
-      y: lastY,
-      color,
-      width: strokeWidth,
-      socketId: socket.id,
-    });
+    socket.emit("startDrawing", { x: lastX, y: lastY, color, width: strokeWidth });
   }
 
   function draw(e) {
@@ -110,64 +96,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const { x, y } = getCoordinates(e);
 
-    ctx.lineTo(x, y);
-    ctx.stroke();
+    localCtx.lineTo(x, y);
+    localCtx.stroke();
 
-    socket.emit("draw", {
-      x,
-      y,
-      color,
-      width: strokeWidth,
-      socketId: socket.id,
-    });
+    socket.emit("draw", { x, y, color, width: strokeWidth });
 
     [lastX, lastY] = [x, y];
   }
 
-  function stopDrawing(e) {
+  function stopDrawing() {
     if (!isDrawing) return;
     isDrawing = false;
-    ctx.beginPath();
-    socket.emit("stopDrawing", { socketId: socket.id });
+    localCtx.beginPath();
+    socket.emit("stopDrawing");
   }
 
-  // draws on the non-drawing client(s) screen(s)
-  socket.on("incomingStartDrawing", ({ x, y, color, width, socketId }) => {
-    if (!otherUsers[socketId]) {
-      otherUsers[socketId] = { x, y, color, width, isDrawing: true };
-    }
-  });
-  
-  socket.on("incomingDraw", ({ x, y, color, width, socketId }) => {
-    if (otherUsers[socketId] && otherUsers[socketId].isDrawing) {
-      ctx.beginPath();
-      ctx.moveTo(otherUsers[socketId].x, otherUsers[socketId].y);
-      ctx.lineTo(x, y);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = width;
-      ctx.lineCap = "round";
-      ctx.stroke();
-      otherUsers[socketId].x = x;
-      otherUsers[socketId].y = y;
-    }
-  });
-  
-  socket.on("incomingStopDrawing", ({ socketId }) => {
-    if (otherUsers[socketId]) {
-      otherUsers[socketId].isDrawing = false;
-    }
-  });
-  
+  function clearCanvas(ctx) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
 
-  socket.on("changeStrokeColor", ({ socketId, color }) => {
-    if (socketId !== socket.id) {
-      ctx.strokeStyle = color;
-    }
+  // Socket event handlers
+  socket.on("incomingStartDrawing", ({ x, y, color, width }) => {
+    remoteCtx.beginPath();
+    remoteCtx.moveTo(x, y);
+    remoteCtx.lineCap = "round";
+    remoteCtx.lineWidth = width;
+    remoteCtx.strokeStyle = color;
   });
 
-  socket.on("changeStrokeWidth", ({ socketId, width }) => {
-    if (socketId !== socket.id) {
-      ctx.lineWidth = width;
-    }
+  socket.on("incomingDraw", ({ x, y, color, width }) => {
+    remoteCtx.lineTo(x, y);
+    remoteCtx.stroke();
+  });
+
+  socket.on("incomingStopDrawing", () => {
+    remoteCtx.beginPath();
+  });
+
+  socket.on("changeStrokeColor", ({ color }) => {
+    remoteCtx.strokeStyle = color;
+  });
+
+  socket.on("changeStrokeWidth", ({ width }) => {
+    remoteCtx.lineWidth = width;
+  });
+
+  socket.on("clearDrawings", () => {
+    clearCanvas(remoteCtx);
   });
 });

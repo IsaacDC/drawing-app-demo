@@ -15,20 +15,20 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   // start drawing event
-  socket.on("startDrawing", ({ x, y, color, width, socketId }) => {
-    const data = { type: "start", x, y, color, width, socketId };
+  socket.on("startDrawing", ({ x, y, color, width }) => {
+    const data = { type: "start", x, y, color, width };
     socket.broadcast.emit("incomingStartDrawing", data);
   });
 
   // draw event
-  socket.on("draw", ({ x, y, color, width, socketId }) => {
-    const data = { type: "draw", x, y, color, width, socketId };
+  socket.on("draw", ({ x, y, color, width }) => {
+    const data = { type: "draw", x, y, color, width };
     socket.broadcast.emit("incomingDraw", data);
   });
 
   // stop drawing event
-  socket.on("stopDrawing", ({ socketId }) => {
-    const data = { type: "stop", socketId };
+  socket.on("stopDrawing", () => {
+    const data = { type: "stop" };
     socket.broadcast.emit("incomingStopDrawing", data);
   });
 
