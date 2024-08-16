@@ -13,34 +13,29 @@ app.get("/", (req, res) => {
   res.sendFile(join(__dirname, "./public/index.html"));
 });
 
+// Store the canvas state
+let canvasState = [];
+
 io.on("connection", (socket) => {
-  // start drawing event
-  socket.on("startDrawing", ({ x, y, color, width }) => {
-    const data = { type: "start", x, y, color, width };
-    socket.broadcast.emit("incomingStartDrawing", data);
+  // Send the current canvas state to the new connection
+  socket.emit("canvasState", canvasState);
+
+  // Handle drawing events
+  socket.on("draw", (data) => {
+    canvasState.push(data);
+    socket.broadcast.emit("draw", data);
   });
 
-  // draw event
-  socket.on("draw", ({ x, y, color, width }) => {
-    const data = { type: "draw", x, y, color, width };
-    socket.broadcast.emit("incomingDraw", data);
+  // Handle clear canvas event
+  socket.on("clearCanvas", () => {
+    canvasState = [];
+    io.emit("clearCanvas");
   });
 
-  // stop drawing event
-  socket.on("stopDrawing", () => {
-    const data = { type: "stop" };
-    socket.broadcast.emit("incomingStopDrawing", data);
-  });
-
-  // change stroke color event
-  socket.on("changeStrokeColor", (color) => {
-    socket.broadcast.emit("changeStrokeColor", { socketId: socket.id, color });
-  });
-
-  //change stroke width event
-  socket.on("changeStrokeWidth", (width) => {
-    socket.broadcast.emit("changeStrokeWidth", { socketId: socket.id, width });
-  });
+  // Periodically sync canvas state
+  setInterval(() => {
+    socket.emit("canvasState", canvasState);
+  }, 5000); // Sync every 5 seconds
 });
 
 server.listen(3000, () => {
