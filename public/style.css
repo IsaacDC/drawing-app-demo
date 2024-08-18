@@ -3,6 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #081e3f;
+  touch-action: none;
 }
 
 .canvas-container {
@@ -16,9 +17,9 @@ canvas {
 }
 
 .tools {
-  position: sticky;
+  position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
   display: flex;
   flex-direction: row;
   align-items: center;

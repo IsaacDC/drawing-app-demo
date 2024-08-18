@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.width = 1920;
   canvas.height = 1080;
 
+  const pointer = setupPointingDevice(canvas);
+
+
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
   canvas.addEventListener("mousemove", draw);
@@ -79,7 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function draw(e) {
     if (!isDrawing) return;
-    e.preventDefault();
 
     const { x, y } = getCoordinates(e);
 
