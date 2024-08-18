@@ -13,9 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.width = 1920;
   canvas.height = 1080;
 
-  const pointer = setupPointingDevice(canvas);
-
-
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
   canvas.addEventListener("mousemove", draw);
@@ -27,14 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("touchmove", draw);
   canvas.addEventListener("touchend", stopDrawing);
   canvas.addEventListener("touchcancel", stopDrawing);
-
-  // Clear all drawings
-  $("#clear-all").on("click", () => {
-    if (confirm("Are you sure you want to clear all drawings?")) {
-      clearCanvas();
-      socket.emit("clearCanvas");
-    }
-  });
 
   // Update stroke color
   $("#stroke-color").on("input", () => {
