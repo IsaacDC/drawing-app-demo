@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("mouseleave", stopDrawing);
 
   // Touch events
-  canvas.addEventListener("touchstart", startDrawing);
-  canvas.addEventListener("touchmove", draw);
+  canvas.addEventListener("touchstart", touchStart);
+  canvas.addEventListener("touchmove", touchMove);
   canvas.addEventListener("touchend", stopDrawing);
   canvas.addEventListener("touchcancel", stopDrawing);
 
@@ -97,8 +97,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function touchStart(e){
+    if (e.touches.length === 1){
+      startDrawing(e);
+    }
+  }
+
+  function touchMove(e){
+    if (e.touches.length === 1){
+      draw(e);
+    }
   }
 
   // Socket event handlers
