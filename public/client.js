@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function draw(e) {
+    e.preventDefault();
     if (!isDrawing) return;
 
     const { x, y } = getCoordinates(e);
