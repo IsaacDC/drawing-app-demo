@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastY = 0;
   let color = "#000000";
   let strokeWidth = 5;
-  const canvasWidth = 2560;
-  const canvasHeight = 1440;
+  const canvasWidth = 2436;
+  const canvasHeight = 1125;
 
   // Set up canvas
   canvas.width = canvasWidth;

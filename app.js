@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     drawCount++;
 
     // Limit to 300 draw events per minute
-    if (drawCount > 500) {
+    if (drawCount > 1000) {
       socket.emit("drawingLimitReached");
       return;
     }
