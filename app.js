@@ -26,12 +26,6 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("draw", data);
   });
 
-  // Handle clear canvas event
-  socket.on("clearCanvas", () => {
-    canvasState = [];
-    io.emit("clearCanvas");
-  });
-
   // Periodically sync canvas state
   setInterval(() => {
     socket.emit("canvasState", canvasState);
