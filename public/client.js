@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
 
-  const offscreenCanvas = document.createElement("canvas");
+  const offscreenCanvas = document.getElementById("offscreenCanvas");
   offscreenCanvas.width = canvas.width;
   offscreenCanvas.height = canvas.height;
   const offscreenCtx = offscreenCanvas.getContext("2d");
@@ -13,10 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastY = 0;
   let color = "#000000";
   let strokeWidth = 5;
+  const canvasWidth = 1920;
+  const canvasHeight = 1080;
 
   // Set up canvas
-  canvas.width = 1920;
-  canvas.height = 1080;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+
+  offscreenCanvas.width = canvasWidth;
+  offscreenCanvas.height = canvasHeight;
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
@@ -130,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
       offscreenCtx.lineWidth = data.width;
       offscreenCtx.stroke();
     });
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(offscreenCanvas, 0, 0);
   });

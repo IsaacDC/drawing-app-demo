@@ -25,11 +25,6 @@ io.on("connection", (socket) => {
     canvasState.push(data);
     socket.broadcast.emit("draw", data);
   });
-
-  // Periodically sync canvas state
-  setInterval(() => {
-    socket.emit("canvasState", canvasState);
-  }, 5000); // Sync every 5 seconds
 });
 
 server.listen(3000, () => {
