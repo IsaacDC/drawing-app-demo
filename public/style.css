@@ -36,14 +36,6 @@ button {
   border-radius: 8px;
 }
 
-#clear-all {
-  width: 2em;
-  height: 2em;
-  font-size: 16px;
-  background-color: #f44336;
-  cursor: pointer;
-}
-
 button:active {
   box-shadow: 0 5px #666;
   transform: translateY(4px);
