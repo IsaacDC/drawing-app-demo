@@ -35,6 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("touchend", stopDrawing);
   canvas.addEventListener("touchcancel", stopDrawing);
 
+  document.getElementById("download-btn").addEventListener("click", function () {
+    const image = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "drawing.png";
+    link.click();
+  })
+
   // Update stroke color
   $("#stroke-color").on("input", () => {
     color = $("#stroke-color").val();
