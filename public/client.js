@@ -141,6 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
       offscreenCtx.lineTo(data.x2, data.y2);
       offscreenCtx.strokeStyle = data.color;
       offscreenCtx.lineWidth = data.width;
+      offscreenCtx.lineCap = "round";
       offscreenCtx.stroke();
     });
     ctx.clearRect(0, 0, canvas.width, canvas.height);
