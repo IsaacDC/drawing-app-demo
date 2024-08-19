@@ -3,6 +3,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
 
+  const offscreenCanvas = document.createElement("canvas");
+  offscreenCanvas.width = canvas.width;
+  offscreenCanvas.height = canvas.height;
+  const offscreenCtx = offscreenCanvas.getContext("2d");
+
   let isDrawing = false;
   let lastX = 0;
   let lastY = 0;
@@ -38,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.lineWidth = value;
   }
 
-  $("#stroke-width, #slider-value").on("input", function() {
+  $("#stroke-width, #slider-value").on("input", function () {
     updateValues($(this).val());
   });
 
@@ -46,11 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    
+
     if (e.type.startsWith("mouse")) {
-      return { 
-        x: (e.clientX - rect.left) * scaleX, 
-        y: (e.clientY - rect.top) * scaleY 
+      return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY,
       };
     } else {
       const touch = e.touches[0];
@@ -98,14 +103,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function touchStart(e){
-    if (e.touches.length === 1){
+  function touchStart(e) {
+    if (e.touches.length === 1) {
       startDrawing(e);
     }
   }
 
-  function touchMove(e){
-    if (e.touches.length === 1){
+  function touchMove(e) {
+    if (e.touches.length === 1) {
       draw(e);
     }
   }
@@ -116,9 +121,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   socket.on("canvasState", (state) => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
     state.forEach((data) => {
-      drawLine(data.x1, data.y1, data.x2, data.y2, data.color, data.width, false);
+      offscreenCtx.beginPath();
+      offscreenCtx.moveTo(data.x1, data.y1);
+      offscreenCtx.lineTo(data.x2, data.y2);
+      offscreenCtx.strokeStyle = data.color;
+      offscreenCtx.lineWidth = data.width;
+      offscreenCtx.stroke();
     });
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(offscreenCanvas, 0, 0);
   });
 });
