@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   socket.on("canvasState", (state) => {
-    clearCanvas();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     state.forEach((data) => {
       drawLine(data.x1, data.y1, data.x2, data.y2, data.color, data.width, false);
     });
