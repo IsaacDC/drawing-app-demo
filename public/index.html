@@ -15,7 +15,8 @@
   <body>
     <canvas id="canvas"></canvas>
     <canvas id="offscreenCanvas"></canvas>
-    <div class="tools">
+    <div class="tools-container">
+      <div class="tools">
       <input
         title="color-picker"
         type="color"
@@ -39,6 +40,15 @@
         value="5"
         id="slider-value"
       />
+    </div>
+    <div class="tools">
+      <button id="clear-button" title="clear-button">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+      <button id="download-button" title="download-button">
+        <i class="fas fa-download"></i>
+      </button>
+    </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
