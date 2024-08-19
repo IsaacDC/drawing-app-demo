@@ -17,11 +17,32 @@ app.get("/", (req, res) => {
 let canvasState = [];
 
 io.on("connection", (socket) => {
+  let lastDrawTime = Date.now();
+  let drawCount = 0;
+  let drawCountResetTimeout;
+
   // Send the current canvas state to the new connection
   socket.emit("canvasState", canvasState);
 
   // Handle drawing events
   socket.on("draw", (data) => {
+    const now = Date.now();
+    drawCount++;
+
+    // Limit to 300 draw events per minute
+    if (drawCount > 500) {
+      socket.emit("drawingLimitReached");
+      return;
+    }
+
+    lastDrawTime = now;
+
+    // Reset draw count every minute
+    clearTimeout(drawCountResetTimeout);
+    drawCountResetTimeout = setTimeout(() => {
+      drawCount = 0;
+    }, 60 * 1000);
+
     canvasState.push(data);
     socket.broadcast.emit("draw", data);
   });

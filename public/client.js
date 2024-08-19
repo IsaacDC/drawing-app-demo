@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastY = 0;
   let color = "#000000";
   let strokeWidth = 5;
-  const canvasWidth = 1920;
-  const canvasHeight = 1080;
+  const canvasWidth = 2560;
+  const canvasHeight = 1440;
 
   // Set up canvas
   canvas.width = canvasWidth;
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Socket event handlers
+  // Incoming
   socket.on("draw", (data) => {
     drawLine(data.x1, data.y1, data.x2, data.y2, data.color, data.width, false);
   });
@@ -137,5 +137,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(offscreenCanvas, 0, 0);
+  });
+
+  socket.on("drawingLimitReached", () => {
+    alert("You've reached the drawing limit. Please wait a few minutes before drawing again.");
+    isDrawing = false;
   });
 });
