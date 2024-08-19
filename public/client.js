@@ -35,13 +35,35 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("touchend", stopDrawing);
   canvas.addEventListener("touchcancel", stopDrawing);
 
-  document.getElementById("download-btn").addEventListener("click", function () {
-    const image = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = "drawing.png";
-    link.click();
-  })
+  document
+    .getElementById("download-btn")
+    .addEventListener("click", function () {
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = "drawing.png";
+
+      // Create a temporary canvas to draw the white background
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = canvasWidth;
+      tempCanvas.height = canvasHeight;
+      const tempCtx = tempCanvas.getContext("2d");
+
+      // Draw the white background
+      tempCtx.fillStyle = "#ffffff";
+      tempCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw the original canvas onto the temporary canvas
+      tempCtx.drawImage(canvas, 0, 0);
+
+      // Get the data URL of the temporary canvas with the white background
+      const tempImage = tempCanvas.toDataURL("image/png");
+
+      // Update the link href to the temporary image data URL
+      link.href = tempImage;
+
+      link.click();
+    });
 
   // Update stroke color
   $("#stroke-color").on("input", () => {
