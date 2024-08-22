@@ -66,21 +66,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   // Update stroke color
-  $("#stroke-color").on("input", () => {
-    color = $("#stroke-color").val();
-  });
+  document
+    .getElementById("stroke-color")
+    .addEventListener("input", function () {
+      color = this.value;
+    });
 
   // Update stroke width
   function updateValues(value) {
     strokeWidth = value;
-    $("#stroke-width").val(value);
-    $("#slider-value").val(value);
+    document.getElementById("stroke-width-slider").value = value;
+    document.getElementById("slider-value").value = value;
     ctx.lineWidth = value;
   }
 
-  $("#stroke-width, #slider-value").on("input", function () {
-    updateValues($(this).val());
-  });
+  // Update stroke width based on slider value
+  document
+    .getElementById("stroke-width-slider")
+    .addEventListener("input", function () {
+      updateValues(this.value);
+    });
+
+  // Update stroke width based on input value
+  document
+    .getElementById("slider-value")
+    .addEventListener("input", function () {
+      updateValues(this.value);
+    });
 
   function getCoordinates(e) {
     const rect = canvas.getBoundingClientRect();
@@ -171,7 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   socket.on("drawingLimitReached", () => {
-    alert("You've reached the drawing limit. Please wait a few minutes before drawing again.");
+    alert(
+      "You've reached the drawing limit. Please wait a few minutes before drawing again."
+    );
     isDrawing = false;
   });
 });
