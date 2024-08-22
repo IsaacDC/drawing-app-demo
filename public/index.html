@@ -9,43 +9,53 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     />
-    <title>Collaborative Drawing App</title>
+    <title>Canvas</title>
   </head>
 
   <body>
     <canvas id="canvas"></canvas>
     <canvas id="offscreenCanvas"></canvas>
+
     <div class="tools-container">
       <div class="tools">
-      <input
-        title="color-picker"
-        type="color"
-        id="stroke-color"
-        name="color"
-        value="#00000"
-      />
-      <input
-        title="width-slider"
-        type="range"
-        min="1"
-        max="100"
-        value="5"
-        id="stroke-width-slider"
-      />
-      <input
-        title="slider-value"
-        type="number"
-        min="1"
-        max="100"
-        value="5"
-        id="slider-value"
-      />
-    </div>
-    <div class="tools">
-      <button id="download-btn" title="download-button">
-        <i class="fas fa-download"></i>
-      </button>
-    </div>
+        <input
+          title="color-picker"
+          type="color"
+          id="stroke-color"
+          name="color"
+          value="#00000"
+        />
+        <input
+          title="width-slider"
+          type="range"
+          min="1"
+          max="100"
+          value="5"
+          id="stroke-width-slider"
+        />
+        <input
+          title="slider-value"
+          type="number"
+          min="1"
+          max="100"
+          value="5"
+          id="slider-value"
+        />
+      </div>
+      <div class="tools">
+        <button id="trash-btn" title="clear-button">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+        <button id="pencil-btn" title="pencil-button">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+        <button id="eraser-btn" title="eraser-button">
+          <i class="fas fa-eraser"></i>
+        </button>
+        <button id="download-btn" title="download-button">
+          <i class="fas fa-download"></i>
+        </button>
+      </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>

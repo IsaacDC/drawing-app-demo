@@ -49,6 +49,11 @@ button:active {
   transform: translateY(4px);
 }
 
+button.active {
+  background-color: #8e6922;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
 #stroke-color {
   width: 35px;
   height: 35px;
