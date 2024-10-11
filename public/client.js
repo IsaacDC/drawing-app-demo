@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvasHeight = 1440;
 
   // Set up canvas
-  canvas.style.width = "1240px";
-  canvas.style.height = "720px";
+  canvas.style.width = "720px";
+  canvas.style.height = "480px";
 
   const scale = window.devicePixelRatio;
   canvas.width = canvasWidth * scale;
