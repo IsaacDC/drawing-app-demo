@@ -22,11 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvasHeight = 1440;
 
   // Set up canvas
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
+  canvas.style.width = canvasWidth;
+  canvas.style.height = canvasHeight;
 
   offscreenCanvas.width = canvasWidth;
   offscreenCanvas.height = canvasHeight;
+
+  const scale = window.devicePixelRatio;
+  canvas.width = 1920 * scale;
+  canvas.height = 1080 * scale;
+
+  context.scale(scale, scale);
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
@@ -70,20 +76,20 @@ document.addEventListener("DOMContentLoaded", () => {
       link.click();
     });
 
-    pencilButton.addEventListener("click", function () {
-      setActiveTool("pencil");
-      color = pencilColor;
-      strokeWidth = pencilWidth;
-      updateValues(strokeWidth);
-    });
-  
-    eraserButton.addEventListener("click", function () {
-      setActiveTool("eraser");
-      color = "white";
-      strokeWidth = 20;
-      updateValues(strokeWidth);
-    });
-    
+  pencilButton.addEventListener("click", function () {
+    setActiveTool("pencil");
+    color = pencilColor;
+    strokeWidth = pencilWidth;
+    updateValues(strokeWidth);
+  });
+
+  eraserButton.addEventListener("click", function () {
+    setActiveTool("eraser");
+    color = "white";
+    strokeWidth = 20;
+    updateValues(strokeWidth);
+  });
+
   // Update stroke color
   document
     .getElementById("stroke-color")

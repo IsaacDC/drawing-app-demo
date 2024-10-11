@@ -6,8 +6,6 @@ body {
 }
 
 canvas {
-  width: 1920px;
-  height: 1080px;
   margin: 10px;
   background-color: white;
 }
@@ -34,7 +32,7 @@ canvas {
 }
 
 button {
-  background-color: #b6862c;
+  background-color: #B6862C;
   width: 3em;
   height: 2.4em;
   border: none;
