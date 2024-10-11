@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   offscreenCanvas.width = canvasWidth;
   offscreenCanvas.height = canvasHeight;
 
-  canvas.style.width = "850";
+  canvas.style.width = "850px";
   canvas.style.height = "480px";
 
   // Mouse events
