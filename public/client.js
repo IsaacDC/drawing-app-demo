@@ -24,11 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
-
+  canvas.style.width = "720px";
+  canvas.style.height = "480px";
   offscreenCanvas.width = canvasWidth;
   offscreenCanvas.height = canvasHeight;
-
-
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
