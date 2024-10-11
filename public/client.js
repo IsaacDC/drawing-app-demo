@@ -22,15 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvasHeight = 1440;
 
   // Set up canvas
-  canvas.style.width = canvasWidth;
-  canvas.style.height = canvasHeight;
-
-  offscreenCanvas.width = canvasWidth;
-  offscreenCanvas.height = canvasHeight;
+  canvas.style.width = '1920px';
+  canvas.style.height = '1080px';
 
   const scale = window.devicePixelRatio;
-  canvas.width = 1920 * scale;
-  canvas.height = 1080 * scale;
+  canvas.width = canvasWidth * scale;
+  canvas.height = canvasHeight * scale;
+
+  offscreenCanvas.width = canvasWidth * scale;
+  offscreenCanvas.height = canvasHeight * scale;
 
   context.scale(scale, scale);
 
