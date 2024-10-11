@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvasHeight = 1440;
 
   // Set up canvas
-  canvas.style.width = '1920px';
-  canvas.style.height = '1080px';
+  canvas.style.width = "1920px";
+  canvas.style.height = "1080px";
 
   const scale = window.devicePixelRatio;
   canvas.width = canvasWidth * scale;
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   offscreenCanvas.width = canvasWidth * scale;
   offscreenCanvas.height = canvasHeight * scale;
 
-  context.scale(scale, scale);
+  ctx.scale(scale, scale);
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
