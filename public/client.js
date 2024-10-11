@@ -19,17 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentTool = "pencil";
 
   // Set up canvas
-  const canvasWidth = 2560;
-  const canvasHeight = 1440;
+  const canvasWidth = 1920;
+  const canvasHeight = 1280;
 
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
-
   offscreenCanvas.width = canvasWidth;
   offscreenCanvas.height = canvasHeight;
 
-  canvas.style.width = "850px";
-  canvas.style.height = "480px";
+
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
