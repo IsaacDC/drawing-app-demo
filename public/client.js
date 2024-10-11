@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let pencilWidth = 5;
   let currentTool = "pencil";
 
+  // Set up canvas
   const canvasWidth = 2560;
   const canvasHeight = 1440;
 
@@ -26,8 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   offscreenCanvas.width = canvasWidth;
   offscreenCanvas.height = canvasHeight;
-  // Set up canvas
-  canvas.style.width = "720px";
+
+  canvas.style.width = "850";
   canvas.style.height = "480px";
 
   // Mouse events
