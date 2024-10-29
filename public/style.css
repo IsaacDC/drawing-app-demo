@@ -22,7 +22,6 @@ canvas {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-bottom: 1px solid#666;
   padding: 10px 0;
   z-index: 999;
 }
