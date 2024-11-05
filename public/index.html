@@ -13,13 +13,15 @@
   </head>
 
   <body>
-    <div class="container" style="width: 720px; height: 480px; margin: 10px">
-      <canvas id="canvas"></canvas>
+    <div class="wrapper">
+      <div class="container" style="width: 720px; height: 480px; margin: 10px">
+        <canvas id="canvas"></canvas>
 
+      </div>
       <canvas id="offscreenCanvas"></canvas>
-    </div>
 
-    <div class="tools-container">
+
+      <div class="tools-container">
         <div class="tools">
           <input
             title="color-picker"
@@ -58,6 +60,7 @@
         </div>
       </div>
     </div>
+  </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="client.js"></script>
