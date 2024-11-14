@@ -13,13 +13,13 @@
   </head>
 
   <body>
-    <div class="wrapper" style="padding: 10px;">
+    <div id="wrapper" style="padding: 10px;">
 
       <div id="username-container">
         <h1>UserName: Username</h1>
       </div>
 
-      <div class="canvas-container">
+      <div id="canvas-container">
         <canvas id="canvas"></canvas>
       </div>
 
@@ -69,5 +69,13 @@
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="client.js"></script>
+    <script>
+      let usernameContainerHeight = document.getElementById("username-container").offsetHeight;
+      let wrapperPadding = parseInt(document.getElementById("wrapper").style.padding);
+      let totalHeight = usernameContainerHeight + wrapperPadding;
+
+      const canvasContainer = document.getElementById("canvas-container");
+      canvasContainer.style.marginTop = totalHeight + "px";
+    </script>
   </body>
 </html>
