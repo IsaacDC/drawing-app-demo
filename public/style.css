@@ -7,7 +7,7 @@ body {
 
 #username-container {
   position: fixed;
-  left: 0;
+  left: 10;
   width: 100%;
   font-size: 1.5rem;
   color: white;
@@ -15,6 +15,7 @@ body {
 }
 
 .canvas-container {
+  margin-top: 30px;
   width: 720px;
   height: 480px;
 }
