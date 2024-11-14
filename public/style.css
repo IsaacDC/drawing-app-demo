@@ -6,6 +6,7 @@ body {
 }
 
 #username-container {
+  display: flex;
   position: sticky;
   left: 0;
   width: 100%;
