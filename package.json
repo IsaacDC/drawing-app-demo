@@ -1,7 +1,7 @@
 {
   "name": "socketio-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is a simple, collaborative live drawing application built with Node.js, Express.js, and Socket.IO. The current code serves as a concept demo for a larger-scale project I'm developing.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +12,6 @@
   "dependencies": {
     "express": "^4.19.2",
     "socket.io": "^4.7.5"
-  }
+  },
+  "devDependencies": {}
 }
