@@ -1,0 +1,37 @@
+button {
+  border: none;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 50px;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+}
+
+.tools button {
+  background-color: var(--secondary-color);
+}
+
+.tools button:hover {
+  background-color: var(--button-hover-color);
+}
+
+#trash-btn {
+  background-color: var(--secondary-button-color);
+}
+
+#trash-btn:hover {
+  background-color: var(--secondary-button-hover-color);
+}
+
+button:active{
+  transform: translateY(5px);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+button.active {
+  transform: translateY(3px);
+  background-color: var(--button-active-background);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}

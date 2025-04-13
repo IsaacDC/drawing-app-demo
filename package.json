@@ -10,8 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "express": "^4.19.2",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "dotenv": "^16.4.7",
+    "helmet": "^8.0.0",
+    "sqlite3": "^5.1.7"
+
   },
   "devDependencies": {}
 }

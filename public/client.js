@@ -1,38 +1,31 @@
+"use strict";
 document.addEventListener("DOMContentLoaded", () => {
   const socket = io.connect();
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-
   const offscreenCanvas = document.getElementById("offscreenCanvas");
   const offscreenCtx = offscreenCanvas.getContext("2d");
-
-  const pencilButton = document.getElementById("pencil-btn");
-  const eraserButton = document.getElementById("eraser-btn");
 
   let isDrawing = false;
   let lastX = 0;
   let lastY = 0;
   let color = "#000000";
-  let strokeWidth = 5;
-  let pencilColor = "#000000";
-  let pencilWidth = 5;
+  let strokeWidth = 10;
+  let pencilColor = color;
   let currentTool = "pencil";
 
-  // Set up canvas
   const canvasWidth = 2560;
   const canvasHeight = 1440;
 
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-  offscreenCanvas.width = canvasWidth;
-  offscreenCanvas.height = canvasHeight;
+  // Set up canvas
+  canvas.width = offscreenCanvas.width = canvasWidth;
+  canvas.height = offscreenCanvas.height = canvasHeight;
 
   // Mouse events
   canvas.addEventListener("mousedown", startDrawing);
   canvas.addEventListener("mousemove", draw);
   canvas.addEventListener("mouseup", stopDrawing);
   canvas.addEventListener("mouseleave", stopDrawing);
-
   // Touch events
   canvas.addEventListener("touchstart", touchStart);
   canvas.addEventListener("touchmove", touchMove);
@@ -40,69 +33,75 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas.addEventListener("touchcancel", stopDrawing);
 
   document
-    .getElementById("download-btn")
-    .addEventListener("click", function () {
-      const image = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = "drawing.png";
-
-      // Create a temporary canvas to draw the white background
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = canvasWidth;
-      tempCanvas.height = canvasHeight;
-      const tempCtx = tempCanvas.getContext("2d");
-
-      // Draw the white background
-      tempCtx.fillStyle = "#ffffff";
-      tempCtx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-      // Draw the original canvas onto the temporary canvas
-      tempCtx.drawImage(canvas, 0, 0);
-
-      // Get the data URL of the temporary canvas with the white background
-      const tempImage = tempCanvas.toDataURL("image/png");
-
-      // Update the link href to the temporary image data URL
-      link.href = tempImage;
-
-      link.click();
-    });
-
-  pencilButton.addEventListener("click", function () {
-    setActiveTool("pencil");
-    color = pencilColor;
-    strokeWidth = pencilWidth;
-    updateValues(strokeWidth);
-  });
-
-  eraserButton.addEventListener("click", function () {
-    setActiveTool("eraser");
-    color = "white";
-    strokeWidth = 20;
-    updateValues(strokeWidth);
-  });
-
-  // Update stroke color
-  document
     .getElementById("stroke-color")
-    .addEventListener("input", function () {
-      color = this.value;
-    });
-
-  // Update stroke width based on slider value
+    .addEventListener("input", updateStrokeColor);
+  document
+    .getElementById("pencil-btn")
+    .addEventListener("click", () => setActiveTool("pencil"));
+  document
+    .getElementById("eraser-btn")
+    .addEventListener("click", () => setActiveTool("eraser"));
+  document
+    .getElementById("download-btn")
+    .addEventListener("click", downloadImage);
   document
     .getElementById("stroke-width-slider")
-    .addEventListener("input", function () {
-      updateValues(this.value);
-    });
-
-  // Update stroke width based on input value
+    .addEventListener("input", updateStrokeWidth);
   document
     .getElementById("slider-value")
-    .addEventListener("input", function () {
-      updateValues(this.value);
-    });
+    .addEventListener("input", updateStrokeWidth);
+
+  loadDrawings();
+  setActiveTool("pencil");
+
+  function updateStrokeColor(e) {
+    if (currentTool === "pencil") {
+      color = pencilColor = e.target.value;
+    }
+  }
+
+  function setActiveTool(tool) {
+    const pencilButton = document.getElementById("pencil-btn");
+    const eraserButton = document.getElementById("eraser-btn");
+
+    switch (tool) {
+      case "pencil":
+        pencilButton.classList.add("active");
+        eraserButton.classList.remove("active");
+        color = pencilColor;
+        break;
+      case "eraser":
+        eraserButton.classList.add("active");
+        pencilButton.classList.remove("active");
+        color = "white";
+        break;
+    }
+    currentTool = tool;
+  }
+
+  function downloadImage() {
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = canvasWidth;
+    tempCanvas.height = canvasHeight;
+    const tempCtx = tempCanvas.getContext("2d");
+
+    tempCtx.fillStyle = "#ffffff";
+    tempCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+    tempCtx.drawImage(canvas, 0, 0);
+
+    const link = document.createElement("a");
+    link.href = tempCanvas.toDataURL("image/png");
+    link.download = "drawing.png";
+    link.click();
+  }
+
+  function updateStrokeWidth(e) {
+    const value = e.target.value;
+    strokeWidth = value;
+    document.getElementById("stroke-width-slider").value = value;
+    document.getElementById("slider-value").value = value;
+    ctx.lineWidth = value;
+  }
 
   function getCoordinates(e) {
     const rect = canvas.getBoundingClientRect();
@@ -123,34 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function toggleButton(button) {
-    button.classList.toggle("active");
-  }
-
-  function setActiveTool(tool) {
-    if (currentTool !== tool) {
-      if (tool === "pencil") {
-        toggleButton(pencilButton);
-        eraserButton.classList.remove("active");
-      } else {
-        toggleButton(eraserButton);
-        pencilButton.classList.remove("active");
-      }
-      currentTool = tool;
-    }
-  }
-
-  // Set pencil as the default active tool
-  setActiveTool("pencil");
-
-  // Update stroke width
-  function updateValues(value) {
-    strokeWidth = value;
-    document.getElementById("stroke-width-slider").value = value;
-    document.getElementById("slider-value").value = value;
-    ctx.lineWidth = value;
-  }
-
   function startDrawing(e) {
     isDrawing = true;
     const { x, y } = getCoordinates(e);
@@ -160,8 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function draw(e) {
-    e.preventDefault();
     if (!isDrawing) return;
+    e.preventDefault();
 
     const { x, y } = getCoordinates(e);
 
@@ -172,20 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function stopDrawing() {
     isDrawing = false;
-  }
-
-  function drawLine(x1, y1, x2, y2, color, width, emit) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.lineCap = "round";
-    ctx.stroke();
-
-    if (emit) {
-      socket.emit("draw", { x1, y1, x2, y2, color, width });
-    }
   }
 
   function touchStart(e) {
@@ -200,30 +157,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Incoming
+  function drawLine(startX, startY, endX, endY, color, width, emit) {
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(endX, endY);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = "round";
+    ctx.stroke();
+
+    if (emit) {
+      socket.emit("draw", { startX, startY, endX, endY, color, width });
+    }
+  }
+
+  function loadDrawings() {
+    fetch("/getDrawingData")
+      .then((response) => response.json())
+      .then((drawingData) => {
+        offscreenCtx.clearRect(
+          0,
+          0,
+          offscreenCanvas.width,
+          offscreenCanvas.height
+        );
+        drawingData.forEach((data) => {
+          offscreenCtx.beginPath();
+          offscreenCtx.moveTo(data.startX, data.startY);
+          offscreenCtx.lineTo(data.endX, data.endY);
+          offscreenCtx.strokeStyle = data.color;
+          offscreenCtx.lineWidth = data.width;
+          offscreenCtx.lineCap = "round";
+          offscreenCtx.stroke();
+        });
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(offscreenCanvas, 0, 0);
+      })
+      .catch((error) => {
+        console.error("Error fetching drawing data:", error);
+      });
+  }
+
+  socket.on("updateCanvas", () => {
+    loadDrawings();
+  });
+
+  // draws on the non-drawing client(s) screen(s)
   socket.on("draw", (data) => {
-    drawLine(data.x1, data.y1, data.x2, data.y2, data.color, data.width, false);
-  });
-
-  socket.on("canvasState", (state) => {
-    offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-    state.forEach((data) => {
-      offscreenCtx.beginPath();
-      offscreenCtx.moveTo(data.x1, data.y1);
-      offscreenCtx.lineTo(data.x2, data.y2);
-      offscreenCtx.strokeStyle = data.color;
-      offscreenCtx.lineWidth = data.width;
-      offscreenCtx.lineCap = "round";
-      offscreenCtx.stroke();
-    });
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(offscreenCanvas, 0, 0);
-  });
-
-  socket.on("drawingLimitReached", () => {
-    alert(
-      "You've reached the drawing limit. Please wait a few minutes before drawing again."
+    drawLine(
+      data.startX,
+      data.startY,
+      data.endX,
+      data.endY,
+      data.color,
+      data.width,
+      false
     );
-    isDrawing = false;
   });
 });

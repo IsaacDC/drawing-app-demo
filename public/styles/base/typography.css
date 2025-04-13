@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "New-Frank";
+    src: url("../New-Frank.otf");
+  }
+
+  body {
+    font-family: "New-Frank", sans-serif !important;
+    background-color: var(--primary-color);
+    color: white;
+    margin: 0;
+    padding: 0;
+  }

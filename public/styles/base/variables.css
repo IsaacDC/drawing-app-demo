@@ -1,0 +1,9 @@
+:root {
+  --primary-color: #081e3f;
+  --secondary-color: #b6862c;
+  --tertiary-color: white;
+  --button-hover-color: #a57328;
+  --secondary-button-color: #ff3232;
+  --secondary-button-hover-color: #c72727;
+  --button-active-background: #8e6922;
+}

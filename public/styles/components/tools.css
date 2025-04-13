@@ -1,0 +1,70 @@
+#stroke-color {
+  width: 35px;
+  height: 35px;
+  position: relative;
+  padding: 2px 4px;
+  background: content-box;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 50%;
+}
+
+#stroke-color::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 4px;
+  background: conic-gradient(
+      hsl(360, 100%, 50%),
+      hsl(315, 100%, 50%),
+      hsl(270, 100%, 50%),
+      hsl(225, 100%, 50%),
+      hsl(180, 100%, 50%),
+      hsl(135, 100%, 50%),
+      hsl(90, 100%, 50%),
+      hsl(45, 100%, 50%),
+      hsl(0, 100%, 50%)
+    )
+    border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+#stroke-color::-webkit-color-swatch {
+  border-style: none;
+  border-radius: 50%;
+}
+
+input[type="range"] {
+  width: 40%;
+  border-radius: 15px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: #ccc;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  background: #2196f3;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+input[type="range"]:hover {
+  opacity: 1;
+}
+
+#slider-value {
+  border: none;
+  width: 3rem;
+  font-size: 1rem;
+}

@@ -2,52 +2,45 @@ const express = require("express");
 const { Server } = require("socket.io");
 const { createServer } = require("node:http");
 const { join } = require("node:path");
+const helmet = require("helmet");
+const db = require("./src/database/sqlite");
+require("dotenv").config();
+
+const serverHost = process.env.SERVER_HOST;
+const serverPort = process.env.SERVER_PORT;
 
 const app = express();
 const server = createServer(app);
+const io = new Server(server, {
+  origin: `http://${serverHost}:${serverPort}`,
+  credentials: true,
+});
 
-const io = new Server(server);
-app.use(express.static(join(__dirname, "public")));
+app.set("io", io);
+app.set("trust proxy", 1);
+
+app.use(express.static("public"));
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+
+const routes = require("./src/routes/index");
+app.use(routes);
 
 app.get("/", (req, res) => {
   res.sendFile(join(__dirname, "./public/index.html"));
 });
 
-// Store the canvas state
-let canvasState = [];
-
 io.on("connection", (socket) => {
-  let lastDrawTime = Date.now();
-  let drawCount = 0;
-  let drawCountResetTimeout;
-
-  // Send the current canvas state to the new connection
-  socket.emit("canvasState", canvasState);
-
-  // Handle drawing events
+  // start drawing event
   socket.on("draw", (data) => {
-    const now = Date.now();
-    drawCount++;
-
-    // Limit to 300 draw events per minute
-    if (drawCount > 1000) {
-      socket.emit("drawingLimitReached");
-      return;
-    }
-
-    lastDrawTime = now;
-
-    // Reset draw count every minute
-    clearTimeout(drawCountResetTimeout);
-    drawCountResetTimeout = setTimeout(() => {
-      drawCount = 0;
-    }, 60 * 1000);
-
-    canvasState.push(data);
-    socket.broadcast.emit("draw", data);
+    db.insertDrawingData(data);
+    socket.broadcast.emit("draw", data.data);
   });
 });
 
-server.listen(3000, () => {
-  console.log("Server is running!");
+server.listen(serverPort, () => {
+  console.log(`Server running at ${serverHost}:${serverPort}`);
 });
